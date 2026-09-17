@@ -6424,17 +6424,32 @@ module GFS_typedefs
         print *,'iopt_dveg  =  ', Model%iopt_dveg
         print *,'iopt_crs   =  ', Model%iopt_crs
         print *,'iopt_btr   =  ', Model%iopt_btr
+        print *,'iopt_rsf   =  ', Model%iopt_rsf
         print *,'iopt_run   =  ', Model%iopt_run
         print *,'iopt_sfc   =  ', Model%iopt_sfc
+        print *,'psi_opt    =  ', Model%psi_opt
         print *,'iopt_frz   =  ', Model%iopt_frz
         print *,'iopt_inf   =  ', Model%iopt_inf
+        print *,'iopt_infdv =  ', Model%iopt_infdv
+        print *,'iopt_tdrn  =  ', Model%iopt_tdrn
+        print *,'iopt_irr   =  ', Model%iopt_irr
+        print *,'iopt_irrm  =  ', Model%iopt_irrm
         print *,'iopt_rad   =  ', Model%iopt_rad
         print *,'iopt_alb   =  ', Model%iopt_alb
         print *,'iopt_snf   =  ', Model%iopt_snf
         print *,'iopt_tbot   =  ',Model%iopt_tbot
         print *,'iopt_stc   =  ', Model%iopt_stc
+        print *,'iopt_tksno =  ', Model%iopt_tksno
+        print *,'iopt_soil  =  ', Model%iopt_soil
+        print *,'iopt_pedo  =  ', Model%iopt_pedo
+        print *,'iopt_crop  =  ', Model%iopt_crop
+        print *,'iopt_gla   =  ', Model%iopt_gla
         print *,'iopt_trs   =  ', Model%iopt_trs
         print *,'iopt_diag  =  ', Model%iopt_diag
+        print *,'iopt_compact =', Model%iopt_compact
+        print *,'iopt_wetland =', Model%iopt_wetland
+        print *,'iopt_scf   =  ', Model%iopt_scf
+        print *,'sf_urban_physics = ', Model%sf_urban_physics
       elseif (Model%lsm == Model%lsm_ruc) then
         print *,' RUC Land Surface Model used'
         print *, 'The Physics options are'
@@ -7393,17 +7408,31 @@ module GFS_typedefs
         print *, ' iopt_dveg         : ', Model%iopt_dveg
         print *, ' iopt_crs          : ', Model%iopt_crs
         print *, ' iopt_btr          : ', Model%iopt_btr
+        print *, ' iopt_rsf          : ', Model%iopt_rsf
         print *, ' iopt_run          : ', Model%iopt_run
         print *, ' iopt_sfc          : ', Model%iopt_sfc
         print *, ' iopt_frz          : ', Model%iopt_frz
         print *, ' iopt_inf          : ', Model%iopt_inf
+        print *, ' iopt_infdv        : ', Model%iopt_infdv
+        print *, ' iopt_tdrn         : ', Model%iopt_tdrn
+        print *, ' iopt_irr          : ', Model%iopt_irr
+        print *, ' iopt_irrm         : ', Model%iopt_irrm
         print *, ' iopt_rad          : ', Model%iopt_rad
         print *, ' iopt_alb          : ', Model%iopt_alb
         print *, ' iopt_snf          : ', Model%iopt_snf
         print *, ' iopt_tbot         : ', Model%iopt_tbot
         print *, ' iopt_stc          : ', Model%iopt_stc
+        print *, ' iopt_tksno        : ', Model%iopt_tksno
+        print *, ' iopt_soil         : ', Model%iopt_soil
+        print *, ' iopt_pedo         : ', Model%iopt_pedo
+        print *, ' iopt_crop         : ', Model%iopt_crop
+        print *, ' iopt_gla          : ', Model%iopt_gla
         print *, ' iopt_trs          : ', Model%iopt_trs
         print *, ' iopt_diag         : ', Model%iopt_diag
+        print *, ' iopt_compact      : ', Model%iopt_compact
+        print *, ' iopt_wetland      : ', Model%iopt_wetland
+        print *, ' iopt_scf          : ', Model%iopt_scf
+        print *, ' sf_urban_physics  : ', Model%sf_urban_physics
       elseif (Model%lsm == Model%lsm_ruc) then
         print *,' RUC Land Surface Model used'
         print *, 'The Physics options are'
