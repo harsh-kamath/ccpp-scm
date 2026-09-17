@@ -1661,6 +1661,114 @@
   type = real
   kind = kind_phys
   active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[fifract]
+  standard_name = flood_irrigation_fraction
+  long_name = fraction of grid cell using flood irrigation
+  units = 1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[irwatfi]
+  standard_name = flood_irrigation_water_amount
+  long_name = flood irrigation water amount remaining to apply
+  units = m
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[mifract]
+  standard_name = micro_irrigation_fraction
+  long_name = fraction of grid cell using micro irrigation
+  units = 1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[irwatmi]
+  standard_name = micro_irrigation_water_amount
+  long_name = micro irrigation water amount remaining to apply
+  units = m
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[sifract]
+  standard_name = sprinkler_irrigation_fraction
+  long_name = fraction of grid cell using sprinkler irrigation
+  units = 1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[irwatsi]
+  standard_name = sprinkler_irrigation_water_amount
+  long_name = sprinkler irrigation water amount remaining to apply
+  units = m
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[td_fraction]
+  standard_name = tile_drainage_fraction
+  long_name = fraction of grid cell using tile drainage
+  units = 1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[irfract]
+  standard_name = grid_irrigation_fraction
+  long_name = total irrigated fraction of grid cell
+  units = 1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[irnumsi]
+  standard_name = sprinkler_irrigation_event_count
+  long_name = number of sprinkler irrigation events
+  units = count
+  dimensions = (horizontal_loop_extent)
+  type = integer
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[irnummi]
+  standard_name = micro_irrigation_event_count
+  long_name = number of micro irrigation events
+  units = count
+  dimensions = (horizontal_loop_extent)
+  type = integer
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[irnumfi]
+  standard_name = flood_irrigation_event_count
+  long_name = number of flood irrigation events
+  units = count
+  dimensions = (horizontal_loop_extent)
+  type = integer
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[fsatxy]
+  standard_name = soil_saturated_fraction
+  long_name = fraction of grid cell with saturated soil
+  units = 1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[wsurfxy]
+  standard_name = wetland_water_storage
+  long_name = wetland surface water storage
+  units = mm
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[urban_irrigation]
+  standard_name = apply_urban_irrigation
+  long_name = flag to restore urban soil moisture to field capacity
+  units = flag
+  dimensions = (horizontal_loop_extent)
+  type = logical
+  active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
 [zwtxy]
   standard_name = water_table_depth
   long_name = water table depth
@@ -1701,6 +1809,69 @@
   type = real
   kind = kind_phys
   active = (control_for_land_surface_scheme == identifier_for_noahmp_land_surface_scheme)
+[snicar_dep_bcpho]
+  standard_name = snicar_hydrophobic_black_carbon_deposition_flux
+  long_name = hydrophobic black carbon deposition flux for SNICAR
+  units = kg m-2 s-1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+[snicar_dep_bcphi]
+  standard_name = snicar_hydrophilic_black_carbon_deposition_flux
+  long_name = hydrophilic black carbon deposition flux for SNICAR
+  units = kg m-2 s-1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+[snicar_dep_ocpho]
+  standard_name = snicar_hydrophobic_organic_carbon_deposition_flux
+  long_name = hydrophobic organic carbon deposition flux for SNICAR
+  units = kg m-2 s-1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+[snicar_dep_ocphi]
+  standard_name = snicar_hydrophilic_organic_carbon_deposition_flux
+  long_name = hydrophilic organic carbon deposition flux for SNICAR
+  units = kg m-2 s-1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+[snicar_dep_dust1]
+  standard_name = snicar_dust_species_1_deposition_flux
+  long_name = dust species 1 deposition flux for SNICAR
+  units = kg m-2 s-1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+[snicar_dep_dust2]
+  standard_name = snicar_dust_species_2_deposition_flux
+  long_name = dust species 2 deposition flux for SNICAR
+  units = kg m-2 s-1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+[snicar_dep_dust3]
+  standard_name = snicar_dust_species_3_deposition_flux
+  long_name = dust species 3 deposition flux for SNICAR
+  units = kg m-2 s-1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+[snicar_dep_dust4]
+  standard_name = snicar_dust_species_4_deposition_flux
+  long_name = dust species 4 deposition flux for SNICAR
+  units = kg m-2 s-1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
+[snicar_dep_dust5]
+  standard_name = snicar_dust_species_5_deposition_flux
+  long_name = dust species 5 deposition flux for SNICAR
+  units = kg m-2 s-1
+  dimensions = (horizontal_loop_extent)
+  type = real
+  kind = kind_phys
 [snicexy]
   standard_name = lwe_thickness_of_ice_in_surface_snow
   long_name = snow layer ice
@@ -5552,15 +5723,39 @@
   units = index
   dimensions = ()
   type = integer
+[iopt_rsf]
+  standard_name = control_for_land_surface_scheme_ground_evaporation_resistance
+  long_name = choice of modular Noah-MP ground evaporation resistance
+  units = index
+  dimensions = ()
+  type = integer
 [iopt_run]
   standard_name = control_for_land_surface_scheme_runoff_and_groundwater
   long_name = choice for runoff and groundwater option (see noahmp module for definition)
   units = index
   dimensions = ()
   type = integer
+[iopt_runsrf]
+  standard_name = control_for_land_surface_scheme_surface_runoff
+  long_name = choice of modular Noah-MP surface runoff option
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_runsub]
+  standard_name = control_for_land_surface_scheme_subsurface_runoff
+  long_name = choice of modular Noah-MP subsurface runoff option
+  units = index
+  dimensions = ()
+  type = integer
 [iopt_sfc]
   standard_name = control_for_land_surface_scheme_surface_layer_drag_coefficient
   long_name = choice for surface layer drag coefficient option (see noahmp module for definition)
+  units = index
+  dimensions = ()
+  type = integer
+[psi_opt]
+  standard_name = control_for_surface_layer_scheme_stability_function
+  long_name = choice of MYNN or GFS surface-layer stability functions
   units = index
   dimensions = ()
   type = integer
@@ -5573,6 +5768,30 @@
 [iopt_inf]
   standard_name = control_for_land_surface_scheme_frozen_soil_permeability
   long_name = choice for frozen soil permeability option (see noahmp module for definition)
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_infdv]
+  standard_name = control_for_land_surface_scheme_dynamic_vic_infiltration
+  long_name = choice of infiltration method for the dynamic VIC runoff scheme
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_tdrn]
+  standard_name = control_for_land_surface_scheme_tile_drainage
+  long_name = choice of modular Noah-MP tile drainage option
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_irr]
+  standard_name = control_for_land_surface_scheme_irrigation
+  long_name = choice of modular Noah-MP irrigation option
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_irrm]
+  standard_name = control_for_land_surface_scheme_irrigation_method
+  long_name = choice of modular Noah-MP irrigation method
   units = index
   dimensions = ()
   type = integer
@@ -5606,6 +5825,36 @@
   units = index
   dimensions = ()
   type = integer
+[iopt_tksno]
+  standard_name = control_for_land_surface_scheme_snow_thermal_conductivity
+  long_name = choice of modular Noah-MP snow thermal conductivity
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_soil]
+  standard_name = control_for_land_surface_scheme_soil_parameter_treatment
+  long_name = choice of modular Noah-MP soil parameter treatment
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_pedo]
+  standard_name = control_for_land_surface_scheme_pedotransfer_function
+  long_name = choice of modular Noah-MP pedotransfer function
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_crop]
+  standard_name = control_for_land_surface_scheme_crop_model
+  long_name = choice of modular Noah-MP crop model
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_gla]
+  standard_name = control_for_land_surface_scheme_glacier_treatment
+  long_name = choice of modular Noah-MP glacier treatment
+  units = index
+  dimensions = ()
+  type = integer
 [iopt_trs]
   standard_name = control_for_land_surface_scheme_surface_thermal_roughness
   long_name = choice for surface thermal roughness option (see noahmp module for definition)
@@ -5615,6 +5864,96 @@
 [iopt_diag]
   standard_name = control_for_land_surface_scheme_surface_diagnose_approach
   long_name = choice for surface diagnose approach option (see noahmp module for definition)
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_compact]
+  standard_name = control_for_land_surface_scheme_snow_compaction
+  long_name = choice of modular Noah-MP snow compaction option
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_wetland]
+  standard_name = control_for_land_surface_scheme_wetland
+  long_name = choice of modular Noah-MP wetland model option
+  units = index
+  dimensions = ()
+  type = integer
+[iopt_scf]
+  standard_name = control_for_land_surface_scheme_snow_cover_fraction
+  long_name = choice of modular Noah-MP ground snow-cover fraction option
+  units = index
+  dimensions = ()
+  type = integer
+[snicar_snowshape_opt]
+  standard_name = control_for_land_surface_scheme_snicar_snow_shape
+  long_name = choice of SNICAR snow grain shape
+  units = index
+  dimensions = ()
+  type = integer
+[snicar_rtsolver_opt]
+  standard_name = control_for_land_surface_scheme_snicar_radiative_transfer_solver
+  long_name = choice of SNICAR radiative transfer solver
+  units = index
+  dimensions = ()
+  type = integer
+[snicar_bandnumber_opt]
+  standard_name = control_for_land_surface_scheme_snicar_spectral_bands
+  long_name = choice of SNICAR spectral band configuration
+  units = index
+  dimensions = ()
+  type = integer
+[snicar_solarspec_opt]
+  standard_name = control_for_land_surface_scheme_snicar_solar_spectrum
+  long_name = choice of SNICAR incident solar spectrum
+  units = index
+  dimensions = ()
+  type = integer
+[snicar_snowoptics_opt]
+  standard_name = control_for_land_surface_scheme_snicar_snow_optics
+  long_name = choice of SNICAR snow optical properties
+  units = index
+  dimensions = ()
+  type = integer
+[snicar_dustoptics_opt]
+  standard_name = control_for_land_surface_scheme_snicar_dust_optics
+  long_name = choice of SNICAR dust optical properties
+  units = index
+  dimensions = ()
+  type = integer
+[snicar_snowbc_intmix]
+  standard_name = flag_for_snicar_internal_mixing_of_black_carbon_in_snow
+  long_name = flag for internally mixed black carbon in SNICAR snow
+  units = flag
+  dimensions = ()
+  type = logical
+[snicar_snowdust_intmix]
+  standard_name = flag_for_snicar_internal_mixing_of_dust_in_snow
+  long_name = flag for internally mixed dust in SNICAR snow
+  units = flag
+  dimensions = ()
+  type = logical
+[snicar_use_aerosol]
+  standard_name = flag_for_snicar_aerosol_effects
+  long_name = flag for SNICAR aerosol effects
+  units = flag
+  dimensions = ()
+  type = logical
+[snicar_use_oc]
+  standard_name = flag_for_snicar_organic_carbon
+  long_name = flag for organic carbon in SNICAR snow
+  units = flag
+  dimensions = ()
+  type = logical
+[snicar_aerosol_readtable]
+  standard_name = flag_for_snicar_aerosol_deposition_from_table
+  long_name = flag for reading SNICAR aerosol deposition from Noah-MP parameter table
+  units = flag
+  dimensions = ()
+  type = logical
+[sf_urban_physics]
+  standard_name = control_for_urban_physics
+  long_name = choice of urban physics for modular Noah-MP
   units = index
   dimensions = ()
   type = integer
