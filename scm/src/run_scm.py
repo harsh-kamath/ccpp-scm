@@ -83,6 +83,37 @@ DEFAULT_SUITE = 'SCM_GFS_v16'
 # Path to physics data files (relative to scm_root)
 PHYSICS_DATA_DIR = 'scm/data/physics_input_data'
 
+# Noah-MP
+MODULAR_NOAHMP_BUNDLED_ROOT = os.path.join(
+    'ccpp', 'physics', 'physics', 'SFC_Models', 'Land', 'NoahmpModular', 'noahmp')
+MODULAR_NOAHMP_SNICAR_DATA = (
+    'snicar_drdt_bst_fit_60_c070416.nc',
+    'snicar_optics_5bnd_c013122.nc',
+    'snicar_optics_480bnd_c012422.nc',
+)
+
+def modular_noahmp_root():
+    """Find the checkout used to build the modular Noah-MP SCM executable."""
+    cache_root = None
+    cache_path = os.path.join(SCM_ROOT, SCM_BIN, 'CMakeCache.txt')
+    if os.path.isfile(cache_path):
+        with open(cache_path) as cache:
+            for line in cache:
+                if line.startswith('NOAHMP_ROOT:PATH='):
+                    cache_root = line.split('=', 1)[1].strip()
+                    break
+
+    environment_root = os.environ.get('NOAHMP_ROOT')
+    if environment_root and cache_root and (
+            os.path.realpath(environment_root) != os.path.realpath(cache_root)):
+        raise ValueError(
+            'NOAHMP_ROOT differs from the checkout configured in {0}: {1}'
+            .format(cache_path, cache_root))
+
+    return os.path.realpath(
+        cache_root or environment_root or
+        os.path.join(SCM_ROOT, MODULAR_NOAHMP_BUNDLED_ROOT))
+
 # Path to analysis script (relative to scm_root)
 SCM_ANALYSIS_SCRIPT_DIR = 'scm/etc/scripts'
 
@@ -607,6 +638,32 @@ class Experiment(object):
                     logging.debug('Linking file {0}'.format(entry))
                     cmd = 'ln -sf {0} {1}'.format(os.path.join(SCM_ROOT, PHYSICS_DATA_DIR, entry), os.path.join(SCM_RUN, entry))
                     execute(cmd)
+
+        # Keep the modular table distinct from the lowercase Noah-MP
+        # table staged with the other physics data.
+        if 'modular_noahmp' in self._suite:
+            parameter_dir = os.path.join(modular_noahmp_root(), 'parameters')
+            table_source = os.path.join(parameter_dir, 'NoahmpTable.TBL')
+            table_link = os.path.join(SCM_RUN, 'NoahmpTable.TBL')
+            if not os.path.isfile(table_source):
+                message = 'Modular Noah-MP table {0} was not found'.format(table_source)
+                logging.critical(message)
+                raise Exception(message)
+            if os.path.lexists(table_link):
+                os.remove(table_link)
+            logging.debug('Linking modular Noah-MP table {0}'.format(table_source))
+            os.symlink(table_source, table_link)
+            for filename in MODULAR_NOAHMP_SNICAR_DATA:
+                source = os.path.join(parameter_dir, filename)
+                link = os.path.join(SCM_RUN, filename)
+                if not os.path.isfile(source):
+                    message = 'Modular Noah-MP SNICAR data {0} was not found'.format(source)
+                    logging.critical(message)
+                    raise Exception(message)
+                if os.path.lexists(link):
+                    os.remove(link)
+                logging.debug('Linking modular Noah-MP SNICAR data {0}'.format(source))
+                os.symlink(source, link)
 
         # Link reference profile data to run directory
         logging.debug('Linking reference profile data from {0} into run directory'.format(os.path.join(SCM_ROOT, REFERENCE_PROFILE_DIR)))
