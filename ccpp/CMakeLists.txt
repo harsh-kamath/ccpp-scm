@@ -126,6 +126,18 @@ set(SCHEME_METADATA_FILES
   "${SCHEME_FILES_DIR}/PBL/SATMEDMF/canopy_driver.meta"
 )
 
+# The modular suite uses the Noah-MP submodule alongside the legacy scheme.
+# Register its metadata only for that suite so other SCM builds remain unchanged.
+if(CCPP_SUITES MATCHES "SCM_GFS_v17_p8_ugwpv1_modular_noahmp")
+  set(MODULAR_NOAHMP_METADATA
+      "${SCHEME_FILES_DIR}/SFC_Models/Land/NoahmpModular/noahmp/drivers/ccpp/noahmp.meta")
+  if(NOT EXISTS "${MODULAR_NOAHMP_METADATA}")
+    message(FATAL_ERROR
+      "Modular Noah-MP metadata not found at ${MODULAR_NOAHMP_METADATA}; initialize the Noah-MP submodule")
+  endif()
+  list(APPEND SCHEME_METADATA_FILES "${MODULAR_NOAHMP_METADATA}")
+endif()
+
 # Create list of scheme source files from metadata files
 ccpp_source_files(SCHEME_FORTRAN_FILES ${SCHEME_METADATA_FILES})
 
