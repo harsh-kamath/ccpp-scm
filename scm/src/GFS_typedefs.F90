@@ -343,6 +343,20 @@ module GFS_typedefs
     real (kind=kind_phys), pointer :: alboldxy(:)  => null()  !<
     real (kind=kind_phys), pointer :: qsnowxy (:)  => null()  !<
     real (kind=kind_phys), pointer :: wslakexy(:)  => null()  !<
+    real (kind=kind_phys), pointer :: fifract (:)  => null()  !< flood irrigation fraction
+    real (kind=kind_phys), pointer :: irwatfi (:)  => null()  !< flood irrigation water amount
+    real (kind=kind_phys), pointer :: mifract (:)  => null()  !< micro irrigation fraction
+    real (kind=kind_phys), pointer :: irwatmi (:)  => null()  !< micro irrigation water amount
+    real (kind=kind_phys), pointer :: sifract (:)  => null()  !< sprinkler irrigation fraction
+    real (kind=kind_phys), pointer :: irwatsi (:)  => null()  !< sprinkler irrigation water amount
+    real (kind=kind_phys), pointer :: td_fraction(:) => null() !< tile drainage fraction
+    real (kind=kind_phys), pointer :: irfract  (:)  => null()  !< grid irrigation fraction
+    integer, pointer :: irnumsi  (:)  => null()  !< sprinkler irrigation event count
+    integer, pointer :: irnummi  (:)  => null()  !< micro irrigation event count
+    integer, pointer :: irnumfi  (:)  => null()  !< flood irrigation event count
+    real (kind=kind_phys), pointer :: fsatxy   (:)  => null()  !< soil saturated fraction
+    real (kind=kind_phys), pointer :: wsurfxy  (:)  => null()  !< wetland water storage
+    logical, pointer :: urban_irrigation(:) => null() !< apply urban irrigation
     real (kind=kind_phys), pointer :: zwtxy   (:)  => null()  !<
     real (kind=kind_phys), pointer :: waxy    (:)  => null()  !<
     real (kind=kind_phys), pointer :: wtxy    (:)  => null()  !<
@@ -374,6 +388,15 @@ module GFS_typedefs
     real (kind=kind_phys), pointer :: tsnoxy    (:,:) => null()  !<
     real (kind=kind_phys), pointer :: smoiseq   (:,:) => null()  !<
     real (kind=kind_phys), pointer :: zsnsoxy   (:,:) => null()  !<
+    real (kind=kind_phys), pointer :: snicar_dep_bcpho(:) => null() !< hydrophobic BC deposition
+    real (kind=kind_phys), pointer :: snicar_dep_bcphi(:) => null() !< hydrophilic BC deposition
+    real (kind=kind_phys), pointer :: snicar_dep_ocpho(:) => null() !< hydrophobic OC deposition
+    real (kind=kind_phys), pointer :: snicar_dep_ocphi(:) => null() !< hydrophilic OC deposition
+    real (kind=kind_phys), pointer :: snicar_dep_dust1(:) => null() !< dust species 1 deposition
+    real (kind=kind_phys), pointer :: snicar_dep_dust2(:) => null() !< dust species 2 deposition
+    real (kind=kind_phys), pointer :: snicar_dep_dust3(:) => null() !< dust species 3 deposition
+    real (kind=kind_phys), pointer :: snicar_dep_dust4(:) => null() !< dust species 4 deposition
+    real (kind=kind_phys), pointer :: snicar_dep_dust5(:) => null() !< dust species 5 deposition
 
 !--- NSSTM variables  (only allocated when [Model%nstf_name(1) > 0])
     real (kind=kind_phys), pointer :: tref   (:)   => null()  !< nst_fld%Tref - Reference Temperature
@@ -1132,18 +1155,46 @@ module GFS_typedefs
     integer              :: iopt_dveg ! 1-> off table lai 2-> on 3-> off;4->off;5 -> on
     integer              :: iopt_crs  !canopy stomatal resistance (1-> ball-berry; 2->jarvis)
     integer              :: iopt_btr  !soil moisture factor for stomatal resistance (1-> noah; 2-> clm; 3-> ssib)
+    integer              :: iopt_rsf  !ground evaporation resistance
     integer              :: iopt_run  !runoff and groundwater (1->simgm; 2->simtop; 3->schaake96; 4->bats)
-    integer              :: iopt_sfc  !surface layer drag coeff (ch & cm) (1->m-o; 2->chen97)
+    integer              :: iopt_runsrf !modular Noah-MP surface runoff option
+    integer              :: iopt_runsub !modular Noah-MP subsurface runoff option
+    integer              :: iopt_sfc  !surface layer drag coeff (ch & cm) (1->m-o; 2->chen97; 3->gfs; 4->mynn)
+    integer              :: psi_opt   !surface-layer stability functions (0->mynn; 1->gfs)
     integer              :: iopt_frz  !supercooled liquid water (1-> ny06; 2->koren99)
     integer              :: iopt_inf  !frozen soil permeability (1-> ny06; 2->koren99)
+    integer              :: iopt_infdv !infiltration option for dynamic VIC runoff
+    integer              :: iopt_tdrn !tile drainage option
+    integer              :: iopt_irr  !irrigation option
+    integer              :: iopt_irrm !irrigation method option
     integer              :: iopt_rad  !radiation transfer (1->gap=f(3d,cosz); 2->gap=0; 3->gap=1-fveg)
-    integer              :: iopt_alb  !snow surface albedo (1->bats; 2->class)
+    integer              :: iopt_alb  !snow surface albedo (1->bats; 2->class; 3->SNICAR)
     integer              :: iopt_snf  !rainfall & snowfall (1-jordan91; 2->bats; 3->noah)
     integer              :: iopt_tbot !lower boundary of soil temperature (1->zero-flux; 2->noah)
     integer              :: iopt_stc  !snow/soil temperature time scheme (only layer 1)
+    integer              :: iopt_tksno !snow thermal conductivity
+    integer              :: iopt_soil !soil parameter treatment
+    integer              :: iopt_pedo !pedotransfer function
+    integer              :: iopt_crop !crop model
+    integer              :: iopt_gla  !glacier treatment
     integer              :: iopt_trs  !thermal roughness scheme (1-z0h=z0m; 2-czil; 3-ec;4-kb inversed)
     integer              :: iopt_diag !2m t/q diagnostic approach (1->external GFS sfc_diag 2->original NoahMP 2-title 3->NoahMP
                                       !2-title + internal GFS sfc_diag  )
+    integer              :: iopt_compact !snow compaction option
+    integer              :: iopt_wetland !wetland model option
+    integer              :: iopt_scf     !ground snow-cover fraction option
+    integer              :: snicar_snowshape_opt
+    integer              :: snicar_rtsolver_opt
+    integer              :: snicar_bandnumber_opt
+    integer              :: snicar_solarspec_opt
+    integer              :: snicar_snowoptics_opt
+    integer              :: snicar_dustoptics_opt
+    logical              :: snicar_snowbc_intmix
+    logical              :: snicar_snowdust_intmix
+    logical              :: snicar_use_aerosol
+    logical              :: snicar_use_oc
+    logical              :: snicar_aerosol_readtable
+    integer              :: sf_urban_physics !urban physics option for modular Noah-MP
 
     ! -- RUC LSM options
     integer              :: mosaic_lu=0     !< control for use of fractional landuse in RUC land surface model
@@ -2603,10 +2654,21 @@ module GFS_typedefs
     allocate (Sfcprop%hflx       (IM))
     allocate (Sfcprop%qss        (IM))
 
+    allocate (Sfcprop%snicar_dep_bcpho(IM))
+    allocate (Sfcprop%snicar_dep_bcphi(IM))
+    allocate (Sfcprop%snicar_dep_ocpho(IM))
+    allocate (Sfcprop%snicar_dep_ocphi(IM))
+    allocate (Sfcprop%snicar_dep_dust1(IM))
+    allocate (Sfcprop%snicar_dep_dust2(IM))
+    allocate (Sfcprop%snicar_dep_dust3(IM))
+    allocate (Sfcprop%snicar_dep_dust4(IM))
+    allocate (Sfcprop%snicar_dep_dust5(IM))
+
     Sfcprop%slope      = zero
     Sfcprop%slope_save = zero
     Sfcprop%shdmin     = clear_val
     Sfcprop%shdmax     = clear_val
+    Sfcprop%snoalb     = clear_val
     Sfcprop%tg3        = clear_val
     Sfcprop%vfrac      = clear_val
     Sfcprop%vtype      = zero
@@ -2621,6 +2683,15 @@ module GFS_typedefs
     Sfcprop%evap       = clear_val
     Sfcprop%hflx       = clear_val
     Sfcprop%qss        = clear_val
+    Sfcprop%snicar_dep_bcpho = 0.0_kind_phys
+    Sfcprop%snicar_dep_bcphi = 0.0_kind_phys
+    Sfcprop%snicar_dep_ocpho = 0.0_kind_phys
+    Sfcprop%snicar_dep_ocphi = 0.0_kind_phys
+    Sfcprop%snicar_dep_dust1 = 0.0_kind_phys
+    Sfcprop%snicar_dep_dust2 = 0.0_kind_phys
+    Sfcprop%snicar_dep_dust3 = 0.0_kind_phys
+    Sfcprop%snicar_dep_dust4 = 0.0_kind_phys
+    Sfcprop%snicar_dep_dust5 = 0.0_kind_phys
 
 !--- In/Out
     allocate (Sfcprop%hice   (IM))
@@ -2721,28 +2792,24 @@ module GFS_typedefs
       Sfcprop%dt_cool = zero
       Sfcprop%qrain   = zero
     endif
-    if (Model%lsm == Model%lsm_noah .or. Model%lsm == Model%lsm_noahmp .or. Model%lsm == Model%lsm_ruc) then
-      allocate (Sfcprop%xlaixy   (IM))
-      Sfcprop%xlaixy     = clear_val
-    else
-      allocate (Sfcprop%xlaixy   (0))
-    end if
     if (Model%lsm == Model%lsm_noah .or. Model%lsm == Model%lsm_noahmp) then
       allocate (Sfcprop%rca      (IM))
       Sfcprop%rca        = clear_val
-    else
-      allocate (Sfcprop%rca      (0))
+    end if
+    if (Model%lsm == Model%lsm_noah) then
+      allocate (Sfcprop%xlaixy   (IM))
+      Sfcprop%xlaixy     = clear_val
     end if
     if (Model%lsm == Model%lsm_ruc .or. Model%lsm == Model%lsm_noahmp .or. &
          (Model%lkm>0 .and. Model%iopt_lake==Model%iopt_lake_clm)) then
-     allocate (Sfcprop%raincprv  (IM))
-     allocate (Sfcprop%rainncprv (IM))
+     allocate(Sfcprop%raincprv  (IM))
+     allocate(Sfcprop%rainncprv (IM))
      Sfcprop%raincprv   = clear_val
      Sfcprop%rainncprv  = clear_val
      if (Model%lsm == Model%lsm_ruc .or. Model%lsm == Model%lsm_noahmp) then
-      allocate (Sfcprop%iceprv    (IM))
-      allocate (Sfcprop%snowprv   (IM))
-      allocate (Sfcprop%graupelprv(IM))
+      allocate(Sfcprop%iceprv    (IM))
+      allocate(Sfcprop%snowprv   (IM))
+      allocate(Sfcprop%graupelprv(IM))
       Sfcprop%iceprv     = clear_val
       Sfcprop%snowprv    = clear_val
       Sfcprop%graupelprv = clear_val
@@ -2766,6 +2833,20 @@ module GFS_typedefs
       allocate (Sfcprop%alboldxy (IM))
       allocate (Sfcprop%qsnowxy  (IM))
       allocate (Sfcprop%wslakexy (IM))
+      allocate (Sfcprop%fifract  (IM))
+      allocate (Sfcprop%irwatfi  (IM))
+      allocate (Sfcprop%mifract  (IM))
+      allocate (Sfcprop%irwatmi  (IM))
+      allocate (Sfcprop%sifract  (IM))
+      allocate (Sfcprop%irwatsi  (IM))
+      allocate (Sfcprop%td_fraction(IM))
+      allocate (Sfcprop%irfract  (IM))
+      allocate (Sfcprop%irnumsi  (IM))
+      allocate (Sfcprop%irnummi  (IM))
+      allocate (Sfcprop%irnumfi  (IM))
+      allocate (Sfcprop%fsatxy   (IM))
+      allocate (Sfcprop%wsurfxy  (IM))
+      allocate (Sfcprop%urban_irrigation(IM))
       allocate (Sfcprop%zwtxy    (IM))
       allocate (Sfcprop%waxy     (IM))
       allocate (Sfcprop%wtxy     (IM))
@@ -2776,6 +2857,7 @@ module GFS_typedefs
       allocate (Sfcprop%stblcpxy (IM))
       allocate (Sfcprop%fastcpxy (IM))
       allocate (Sfcprop%xsaixy   (IM))
+      allocate (Sfcprop%xlaixy   (IM))
       allocate (Sfcprop%taussxy  (IM))
       allocate (Sfcprop%smcwtdxy (IM))
       allocate (Sfcprop%deeprechxy (IM))
@@ -2800,6 +2882,22 @@ module GFS_typedefs
       Sfcprop%alboldxy   = clear_val
       Sfcprop%qsnowxy    = clear_val
       Sfcprop%wslakexy   = clear_val
+      ! Optional modular irrigation, tile-drainage, wetland, and urban
+      ! irrigation processes start disabled until SCM case data supplies them.
+      Sfcprop%fifract     = 0.0_kind_phys
+      Sfcprop%irwatfi     = 0.0_kind_phys
+      Sfcprop%mifract     = 0.0_kind_phys
+      Sfcprop%irwatmi     = 0.0_kind_phys
+      Sfcprop%sifract     = 0.0_kind_phys
+      Sfcprop%irwatsi     = 0.0_kind_phys
+      Sfcprop%td_fraction = 0.0_kind_phys
+      Sfcprop%irfract     = 0.0_kind_phys
+      Sfcprop%irnumsi     = 0
+      Sfcprop%irnummi     = 0
+      Sfcprop%irnumfi     = 0
+      Sfcprop%fsatxy      = 0.0_kind_phys
+      Sfcprop%wsurfxy     = 0.0_kind_phys
+      Sfcprop%urban_irrigation = .false.
       Sfcprop%zwtxy      = clear_val
       Sfcprop%waxy       = clear_val
       Sfcprop%wtxy       = clear_val
