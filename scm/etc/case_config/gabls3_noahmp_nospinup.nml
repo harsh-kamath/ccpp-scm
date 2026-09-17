@@ -1,0 +1,11 @@
+&case_config
+    case_name = 'gabls3_noahmp_nospinup'
+    column_area = 145000000.0
+    do_spinup = .false.
+    input_type = 1
+    lsm_ics = .true.
+    output_dir = 'output'
+    reference_profile_choice = 2
+    sfc_roughness_length_cm = 15.0
+    spinup_timesteps = 0
+/
