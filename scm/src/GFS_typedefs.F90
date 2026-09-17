@@ -3891,18 +3891,46 @@ module GFS_typedefs
     integer              :: iopt_dveg      =  4  ! 4 -> off (use table lai; use maximum vegetation fraction)
     integer              :: iopt_crs       =  1  !canopy stomatal resistance (1-> ball-berry; 2->jarvis)
     integer              :: iopt_btr       =  1  !soil moisture factor for stomatal resistance (1-> noah; 2-> clm; 3-> ssib)
+    integer              :: iopt_rsf       =  4  !ground evaporation resistance (legacy CCPP default)
     integer              :: iopt_run       =  3  !runoff and groundwater (1->simgm; 2->simtop; 3->schaake96; 4->bats)
-    integer              :: iopt_sfc       =  1  !surface layer drag coeff (ch & cm) (1->m-o; 2->chen97)
+    integer              :: iopt_runsrf    =  3  !modular Noah-MP surface runoff
+    integer              :: iopt_runsub    =  3  !modular Noah-MP subsurface runoff
+    integer              :: iopt_sfc       =  1  !surface layer drag coeff (ch & cm) (1->m-o; 2->chen97; 3->gfs; 4->mynn)
+    integer              :: psi_opt        =  0  !surface-layer stability functions (0->mynn; 1->gfs)
     integer              :: iopt_frz       =  1  !supercooled liquid water (1-> ny06; 2->koren99)
     integer              :: iopt_inf       =  1  !frozen soil permeability (1-> ny06; 2->koren99)
+    integer              :: iopt_infdv     =  1  !infiltration option for dynamic VIC runoff
+    integer              :: iopt_tdrn      =  0  !tile drainage disabled
+    integer              :: iopt_irr       =  0  !irrigation disabled
+    integer              :: iopt_irrm      =  0  !use spatially specified irrigation method
     integer              :: iopt_rad       =  3  !radiation transfer (1->gap=f(3d,cosz); 2->gap=0; 3->gap=1-fveg)
-    integer              :: iopt_alb       =  2  !snow surface albedo (1->bats; 2->class)
+    integer              :: iopt_alb       =  2  !snow surface albedo (1->bats; 2->class; 3->SNICAR)
     integer              :: iopt_snf       =  1  !rainfall & snowfall (1-jordan91; 2->bats; 3->noah)
     integer              :: iopt_tbot      =  2  !lower boundary of soil temperature (1->zero-flux; 2->noah)
     integer              :: iopt_stc       =  1  !snow/soil temperature time scheme (only layer 1)
+    integer              :: iopt_tksno     =  4  !snow thermal conductivity (legacy CCPP formula)
+    integer              :: iopt_soil      =  1  !soil parameter treatment
+    integer              :: iopt_pedo      =  1  !pedotransfer function
+    integer              :: iopt_crop      =  0  !crop model disabled
+    integer              :: iopt_gla       =  2  !simple legacy glacier treatment
     integer              :: iopt_trs       =  2  !thermal roughness scheme (1-z0h=z0m; 2-czil; 3-ec;4-kb reversed)
     integer              :: iopt_diag      =  2  !2m t/q diagnostic approach (1->external GFS sfc_diag 2->original NoahMP 2-title
                                                  !3->NoahMP 2-title + internal GFS sfc_diag  )
+    integer              :: iopt_compact   =  1  !legacy Noah-MP snow compaction
+    integer              :: iopt_wetland   =  0  !wetland model disabled
+    integer              :: iopt_scf       =  1  !Niu and Yang ground snow-cover fraction
+    integer              :: snicar_snowshape_opt = 3
+    integer              :: snicar_rtsolver_opt = 2
+    integer              :: snicar_bandnumber_opt = 1
+    integer              :: snicar_solarspec_opt = 1
+    integer              :: snicar_snowoptics_opt = 3
+    integer              :: snicar_dustoptics_opt = 1
+    logical              :: snicar_snowbc_intmix = .true.
+    logical              :: snicar_snowdust_intmix = .false.
+    logical              :: snicar_use_aerosol = .true.
+    logical              :: snicar_use_oc = .false.
+    logical              :: snicar_aerosol_readtable = .false.
+    integer              :: sf_urban_physics = 0 !urban physics disabled
 
     integer              :: mosaic_lu      =  0  ! 1 - used of fractional landuse in RUC lsm
     integer              :: mosaic_soil    =  0  ! 1 - used of fractional soil in RUC lsm
@@ -4390,9 +4418,20 @@ module GFS_typedefs
                                nmtvr, ivegsrc, use_ufo, iopt_thcnd, ua_phys, usemonalb,     &
                                aoasis, fasdas, exticeden, nvegcat, nsoilcat,                &
                           !    Noah MP options
-                               iopt_dveg,iopt_crs,iopt_btr,iopt_run,iopt_sfc, iopt_frz,     &
+                               iopt_dveg,iopt_crs,iopt_btr,iopt_rsf,iopt_run,              &
+                               iopt_runsrf,iopt_runsub,iopt_sfc,                           &
+                               iopt_frz,                                                    &
                                iopt_inf, iopt_rad,iopt_alb,iopt_snf,iopt_tbot,iopt_stc,     &
-                               iopt_trs, iopt_diag,                                         &
+                               iopt_tksno,iopt_soil,iopt_pedo,iopt_crop,iopt_gla,           &
+                               iopt_trs, iopt_diag, psi_opt, iopt_infdv, iopt_tdrn,         &
+                               iopt_irr, iopt_irrm, iopt_compact, iopt_wetland, iopt_scf,   &
+                               snicar_snowshape_opt, snicar_rtsolver_opt,                  &
+                               snicar_bandnumber_opt, snicar_solarspec_opt,                &
+                               snicar_snowoptics_opt, snicar_dustoptics_opt,               &
+                               snicar_snowbc_intmix, snicar_snowdust_intmix,               &
+                               snicar_use_aerosol, snicar_use_oc,                          &
+                               snicar_aerosol_readtable,                                   &
+                               sf_urban_physics,                                            &
                           !    RUC lsm options
                                add_fire_heat_flux,                                          &
                                mosaic_lu, mosaic_soil, isncond_opt, isncovr_opt,            &
@@ -5336,10 +5375,18 @@ module GFS_typedefs
     Model%iopt_dveg        = iopt_dveg
     Model%iopt_crs         = iopt_crs
     Model%iopt_btr         = iopt_btr
+    Model%iopt_rsf         = iopt_rsf
     Model%iopt_run         = iopt_run
+    Model%iopt_runsrf      = iopt_runsrf
+    Model%iopt_runsub      = iopt_runsub
     Model%iopt_sfc         = iopt_sfc
+    Model%psi_opt          = psi_opt
     Model%iopt_frz         = iopt_frz
     Model%iopt_inf         = iopt_inf
+    Model%iopt_infdv       = iopt_infdv
+    Model%iopt_tdrn        = iopt_tdrn
+    Model%iopt_irr         = iopt_irr
+    Model%iopt_irrm        = iopt_irrm
     Model%iopt_rad         = iopt_rad
     Model%iopt_alb         = iopt_alb
     if (Model%lsm==Model%lsm_noahmp .and. Model%exticeden .and. iopt_snf == 4) then
@@ -5349,8 +5396,28 @@ module GFS_typedefs
     end if
     Model%iopt_tbot        = iopt_tbot
     Model%iopt_stc         = iopt_stc
+    Model%iopt_tksno       = iopt_tksno
+    Model%iopt_soil        = iopt_soil
+    Model%iopt_pedo        = iopt_pedo
+    Model%iopt_crop        = iopt_crop
+    Model%iopt_gla         = iopt_gla
     Model%iopt_trs         = iopt_trs
     Model%iopt_diag        = iopt_diag
+    Model%iopt_compact     = iopt_compact
+    Model%iopt_wetland     = iopt_wetland
+    Model%iopt_scf         = iopt_scf
+    Model%snicar_snowshape_opt = snicar_snowshape_opt
+    Model%snicar_rtsolver_opt = snicar_rtsolver_opt
+    Model%snicar_bandnumber_opt = snicar_bandnumber_opt
+    Model%snicar_solarspec_opt = snicar_solarspec_opt
+    Model%snicar_snowoptics_opt = snicar_snowoptics_opt
+    Model%snicar_dustoptics_opt = snicar_dustoptics_opt
+    Model%snicar_snowbc_intmix = snicar_snowbc_intmix
+    Model%snicar_snowdust_intmix = snicar_snowdust_intmix
+    Model%snicar_use_aerosol = snicar_use_aerosol
+    Model%snicar_use_oc = snicar_use_oc
+    Model%snicar_aerosol_readtable = snicar_aerosol_readtable
+    Model%sf_urban_physics = sf_urban_physics
 
 ! RUC lsm options
     Model%mosaic_lu        = mosaic_lu
